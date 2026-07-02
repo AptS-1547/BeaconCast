@@ -108,7 +108,14 @@ pub struct PublicActivityMessage {
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(all(debug_assertions, feature = "openapi"), derive(utoipa::ToSchema))]
+pub struct PublicProfile {
+    pub display_name: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(all(debug_assertions, feature = "openapi"), derive(utoipa::ToSchema))]
 pub struct NowResponse {
+    pub profile: PublicProfile,
     pub now: PublicActivity,
 }
 

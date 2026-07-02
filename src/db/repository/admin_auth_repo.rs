@@ -53,6 +53,16 @@ pub async fn find_admin_user_by_id<C: ConnectionTrait>(
         .await?)
 }
 
+pub async fn first_active_admin_user<C: ConnectionTrait>(
+    db: &C,
+) -> Result<Option<admin_user::Model>> {
+    Ok(admin_user::Entity::find()
+        .filter(admin_user::Column::DisabledAt.is_null())
+        .order_by_asc(admin_user::Column::Id)
+        .one(db)
+        .await?)
+}
+
 pub async fn touch_admin_login<C: ConnectionTrait>(db: &C, user_id: i64) -> Result<()> {
     let now = Utc::now();
     admin_user::Entity::update_many()

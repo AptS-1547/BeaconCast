@@ -1005,6 +1005,7 @@ export interface components {
         };
         NowResponse: {
             now: components["schemas"]["PublicActivity"];
+            profile: components["schemas"]["PublicProfile"];
         };
         ProjectSnapshot: {
             category: string;
@@ -1030,6 +1031,9 @@ export interface components {
         };
         /** @enum {string} */
         PublicMessagePart: "status" | "activity" | "project" | "category" | "app" | "source" | "browser_context" | "context" | "git_branch";
+        PublicProfile: {
+            display_name: string;
+        };
         RevokeResponse: {
             revoked: boolean;
         };
@@ -2890,6 +2894,7 @@ export interface operations {
                         code: components["schemas"]["ApiErrorCode"];
                         data?: {
                             now: components["schemas"]["PublicActivity"];
+                            profile: components["schemas"]["PublicProfile"];
                         };
                         error?: null | components["schemas"]["ApiErrorInfo"];
                         msg: string;

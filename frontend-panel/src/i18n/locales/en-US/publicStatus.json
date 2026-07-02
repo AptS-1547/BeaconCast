@@ -1,5 +1,6 @@
 {
 	"actions": {
+		"close": "Close",
 		"loading": "Loading",
 		"refresh": "Refresh"
 	},
@@ -33,7 +34,7 @@
 	},
 	"hero": {
 		"adminMenu": "Admin menu",
-		"title": "Today's beacon"
+		"title": "{{displayName}}'s beacon"
 	},
 	"log": {
 		"loadFailed": "The public beacon could not be reached, so an empty board is shown for now.",
@@ -43,7 +44,11 @@
 		"currentSignal": "Current signal",
 		"currentStatus": "Current status",
 		"lastUpdated": "Last updated",
-		"title": "Notice board",
-		"totalEvents": "Total events"
+		"title": "Notice board"
+	},
+	"panels": {
+		"details": "Details",
+		"log": "Journal",
+		"notice": "Notice board"
 	}
 }

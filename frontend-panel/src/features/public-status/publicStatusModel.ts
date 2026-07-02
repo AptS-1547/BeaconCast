@@ -1,6 +1,9 @@
 import type { NowResponse, PublicActivity } from "@/services/beaconService";
 
 export const fallbackNow: NowResponse = {
+	profile: {
+		display_name: "BeaconCast",
+	},
 	now: {
 		activity_kind: "unknown",
 		status: "unknown",

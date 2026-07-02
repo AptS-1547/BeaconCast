@@ -13,7 +13,7 @@ use crate::config::definitions::{
     PRIVACY_PRIVATE_MODE_LABEL_KEY, VISIBILITY_PUBLIC_HISTORY_DAYS_KEY,
     VISIBILITY_PUBLIC_HISTORY_ENABLED_KEY, VISIBILITY_PUBLIC_MESSAGE_PARTS_KEY,
 };
-use crate::db::repository::{beacon_repo, system_config_repo};
+use crate::db::repository::{admin_auth_repo, beacon_repo, system_config_repo};
 use crate::errors::{AppError, Result};
 use crate::services::activity_projection::{
     ActivityApplicationIdentity, ActivityProjectionContext, ProjectedActivity,
@@ -24,7 +24,7 @@ use crate::types::{
     AgentCapabilitiesRequest, AgentCapabilitiesResponse, AgentCapability, AgentConfigResponse,
     AgentPolicyResponse, AgentUsageSpan, AgentUsageSpansRequest, ClearManualOverrideResponse,
     ManualOverrideResponse, NowResponse, ProjectSnapshot, PublicActivity, PublicActivityMessage,
-    PublicMessagePart, SetManualOverrideRequest, UpdateAgentPolicyRequest,
+    PublicMessagePart, PublicProfile, SetManualOverrideRequest, UpdateAgentPolicyRequest,
     UpdateVisibilityPolicyRequest, UsageSpansAcceptedResponse, UsageSummaryQuery, UsageTotal,
     VisibilityPolicyResponse,
 };
@@ -138,10 +138,12 @@ pub async fn update_agent_capabilities(
 
 pub async fn current_public_activity(state: &crate::runtime::AppState) -> Result<NowResponse> {
     let snapshot = runtime_config_snapshot(state).await?;
+    let profile = public_profile(state).await?;
     let now = Utc::now();
 
     if snapshot.get_bool_or(PRIVACY_PRIVATE_MODE_ENABLED_KEY, false) {
         return Ok(NowResponse {
+            profile,
             now: PublicActivity {
                 status: "private".to_string(),
                 activity_kind: "manual_note".to_string(),
@@ -165,6 +167,7 @@ pub async fn current_public_activity(state: &crate::runtime::AppState) -> Result
         beacon_repo::active_manual_override(state.db_handles.reader()).await?
     {
         return Ok(NowResponse {
+            profile,
             now: PublicActivity {
                 status: override_model.status,
                 activity_kind: "manual_note".to_string(),
@@ -185,6 +188,7 @@ pub async fn current_public_activity(state: &crate::runtime::AppState) -> Result
 
     let Some(event) = beacon_repo::latest_activity_event(state.db_handles.reader()).await? else {
         return Ok(NowResponse {
+            profile,
             now: offline(now, true),
         });
     };
@@ -192,6 +196,7 @@ pub async fn current_public_activity(state: &crate::runtime::AppState) -> Result
     let offline_after = snapshot.get_u64_or(ACTIVITY_OFFLINE_AFTER_SECONDS_KEY, 1800) as i64;
     if now.signed_duration_since(event.observed_at) > Duration::seconds(offline_after) {
         return Ok(NowResponse {
+            profile,
             now: offline(event.observed_at, true),
         });
     }
@@ -199,8 +204,18 @@ pub async fn current_public_activity(state: &crate::runtime::AppState) -> Result
     let message_parts = public_message_parts_from_snapshot(&snapshot);
     let projection_context = ActivityProjectionContext::load(state.db_handles.reader()).await?;
     Ok(NowResponse {
+        profile,
         now: project_public_activity(&projection_context, event, &message_parts),
     })
+}
+
+async fn public_profile(state: &crate::runtime::AppState) -> Result<PublicProfile> {
+    let display_name = admin_auth_repo::first_active_admin_user(state.db_handles.reader())
+        .await?
+        .map(|user| user.display_name)
+        .filter(|value| !value.trim().is_empty())
+        .unwrap_or_else(|| "BeaconCast".to_string());
+    Ok(PublicProfile { display_name })
 }
 
 pub async fn public_activity_log(

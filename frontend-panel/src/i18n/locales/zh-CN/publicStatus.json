@@ -1,5 +1,6 @@
 {
 	"actions": {
+		"close": "关闭",
 		"loading": "读取中",
 		"refresh": "刷新"
 	},
@@ -33,7 +34,7 @@
 	},
 	"hero": {
 		"adminMenu": "管理员菜单",
-		"title": "猫猫的今日信标"
+		"title": "{{displayName}} 的今日信标"
 	},
 	"log": {
 		"loadFailed": "公开信标暂时读不到，先显示空白告示板。",
@@ -43,7 +44,11 @@
 		"currentSignal": "当前信号",
 		"currentStatus": "当前状态",
 		"lastUpdated": "最后更新",
-		"title": "信标告示板",
-		"totalEvents": "事件总数"
+		"title": "信标告示板"
+	},
+	"panels": {
+		"details": "细节",
+		"log": "日志",
+		"notice": "告示板"
 	}
 }

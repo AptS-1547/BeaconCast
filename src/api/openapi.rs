@@ -120,6 +120,7 @@ use utoipa::OpenApi;
             crate::types::ProjectSnapshot,
             crate::types::PublicActivity,
             crate::types::PublicMessagePart,
+            crate::types::PublicProfile,
             crate::types::SetManualOverrideRequest,
             crate::types::UpdateAgentPolicyRequest,
             crate::types::UpdateVisibilityPolicyRequest,
