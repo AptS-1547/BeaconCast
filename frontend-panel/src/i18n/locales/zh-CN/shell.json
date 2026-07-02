@@ -1,9 +1,0 @@
-{
-	"brandLabel": "BeaconCast",
-	"navigationLabel": "BeaconCast 导航",
-	"nav": {
-		"admin": "管理员菜单",
-		"publicStatus": "公开信标"
-	},
-	"status": "BeaconCast 面板已就绪"
-}

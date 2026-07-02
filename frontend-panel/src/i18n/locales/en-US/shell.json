@@ -1,9 +1,0 @@
-{
-	"brandLabel": "BeaconCast",
-	"navigationLabel": "BeaconCast navigation",
-	"nav": {
-		"admin": "Admin menu",
-		"publicStatus": "Public beacon"
-	},
-	"status": "BeaconCast shell ready"
-}
