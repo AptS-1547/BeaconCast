@@ -128,6 +128,7 @@
 	"visibility": {
 		"historyDays": "公开历史天数",
 		"historyEnabled": "公开历史",
+		"historyLimit": "公开日志条数",
 		"parts": {
 			"activity": "活动文本",
 			"app": "当前应用",

@@ -40,7 +40,7 @@ export function PixelBeaconScene({
 				alt=""
 				aria-hidden="true"
 				className="absolute inset-0 h-full w-full object-cover"
-				src="/beaconcast-assets/beaconcast-room-board-background-v1.png"
+				src="/static/beaconcast-room-board-background-v1.png"
 			/>
 			<div className="absolute inset-0 bg-[radial-gradient(circle_at_24%_58%,transparent_0_28%,rgba(32,23,17,0.18)_52%,rgba(32,23,17,0.46)_100%)]" />
 			<div className="absolute inset-x-0 bottom-0 h-36 bg-[linear-gradient(180deg,transparent,rgba(32,23,17,0.58))]" />

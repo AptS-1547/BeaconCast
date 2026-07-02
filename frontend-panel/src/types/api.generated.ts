@@ -1067,6 +1067,8 @@ export interface components {
             /** Format: int64 */
             public_history_days: number;
             public_history_enabled: boolean;
+            /** Format: int64 */
+            public_history_limit: number;
         };
         UpsertActivityActionRequest: {
             category: string;
@@ -1102,6 +1104,8 @@ export interface components {
             /** Format: int64 */
             public_history_days: number;
             public_history_enabled: boolean;
+            /** Format: int64 */
+            public_history_limit: number;
         };
     };
     responses: never;
@@ -2583,6 +2587,8 @@ export interface operations {
                             /** Format: int64 */
                             public_history_days: number;
                             public_history_enabled: boolean;
+                            /** Format: int64 */
+                            public_history_limit: number;
                         };
                         error?: null | components["schemas"]["ApiErrorInfo"];
                         msg: string;
@@ -2634,6 +2640,8 @@ export interface operations {
                             /** Format: int64 */
                             public_history_days: number;
                             public_history_enabled: boolean;
+                            /** Format: int64 */
+                            public_history_limit: number;
                         };
                         error?: null | components["schemas"]["ApiErrorInfo"];
                         msg: string;

@@ -385,6 +385,7 @@ pub struct VisibilityPolicyResponse {
     pub message_parts: Vec<PublicMessagePart>,
     pub public_history_enabled: bool,
     pub public_history_days: u64,
+    pub public_history_limit: u64,
     pub private_mode_enabled: bool,
     pub private_mode_label: String,
 }
@@ -395,6 +396,7 @@ pub struct UpdateVisibilityPolicyRequest {
     pub message_parts: Vec<PublicMessagePart>,
     pub public_history_enabled: bool,
     pub public_history_days: u64,
+    pub public_history_limit: u64,
     pub private_mode_enabled: bool,
     pub private_mode_label: String,
 }

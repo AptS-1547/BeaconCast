@@ -46,6 +46,7 @@ const defaultVisibilityPolicy: UpdateVisibilityPolicyRequest = {
 	],
 	public_history_enabled: true,
 	public_history_days: 7,
+	public_history_limit: 10,
 	private_mode_enabled: false,
 	private_mode_label: "Signal hidden",
 };
@@ -184,7 +185,7 @@ export function PolicyPanel({
 							}
 						/>
 					</div>
-					<div className="grid gap-3 sm:grid-cols-[140px_minmax(0,1fr)]">
+					<div className="grid gap-3 sm:grid-cols-[140px_140px_minmax(0,1fr)]">
 						<label className="grid gap-1 font-bold text-sm">
 							<span>{t("visibility.historyDays")}</span>
 							<input
@@ -196,6 +197,22 @@ export function PolicyPanel({
 									setVisibilityDraft((draft) => ({
 										...draft,
 										public_history_days: Number(event.target.value),
+									}))
+								}
+							/>
+						</label>
+						<label className="grid gap-1 font-bold text-sm">
+							<span>{t("visibility.historyLimit")}</span>
+							<input
+								className="h-10 border-[#5c3a21] border-2 bg-white px-3 outline-none focus:ring-4 focus:ring-[#8bbbd9]"
+								min={1}
+								max={200}
+								type="number"
+								value={visibilityDraft.public_history_limit}
+								onChange={(event) =>
+									setVisibilityDraft((draft) => ({
+										...draft,
+										public_history_limit: Number(event.target.value),
 									}))
 								}
 							/>

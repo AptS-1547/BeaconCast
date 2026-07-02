@@ -34,7 +34,7 @@ export function PublicStatusPage() {
 		try {
 			const [nowResponse, logResponse] = await Promise.all([
 				publicBeaconService.now(),
-				publicBeaconService.activityLog(10),
+				publicBeaconService.activityLog(200),
 			]);
 			setNow(nowResponse);
 			setLog(logResponse.items);

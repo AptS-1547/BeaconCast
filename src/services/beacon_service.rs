@@ -11,7 +11,8 @@ use crate::config::definitions::{
     AGENT_CONFIG_POLL_INTERVAL_SECONDS_KEY, AGENT_INCLUDE_APP_LABEL_KEY,
     AGENT_REPORT_INTERVAL_SECONDS_KEY, PRIVACY_PRIVATE_MODE_ENABLED_KEY,
     PRIVACY_PRIVATE_MODE_LABEL_KEY, VISIBILITY_PUBLIC_HISTORY_DAYS_KEY,
-    VISIBILITY_PUBLIC_HISTORY_ENABLED_KEY, VISIBILITY_PUBLIC_MESSAGE_PARTS_KEY,
+    VISIBILITY_PUBLIC_HISTORY_ENABLED_KEY, VISIBILITY_PUBLIC_HISTORY_LIMIT_KEY,
+    VISIBILITY_PUBLIC_MESSAGE_PARTS_KEY,
 };
 use crate::db::repository::{admin_auth_repo, beacon_repo, system_config_repo};
 use crate::errors::{AppError, Result};
@@ -221,7 +222,6 @@ async fn public_profile(state: &crate::runtime::AppState) -> Result<PublicProfil
 pub async fn public_activity_log(
     state: &crate::runtime::AppState,
     page: aster_forge_api::LimitQuery,
-    cursor: aster_forge_api::CreatedAtCursorQuery,
 ) -> Result<aster_forge_api::CursorPage<ActivityLogEntry, aster_forge_api::DateTimeIdCursor>> {
     let snapshot = runtime_config_snapshot(state).await?;
     if !snapshot.get_bool_or(VISIBILITY_PUBLIC_HISTORY_ENABLED_KEY, true)
@@ -230,34 +230,19 @@ pub async fn public_activity_log(
         return Ok(aster_forge_api::CursorPage::new(
             Vec::new(),
             0,
-            page.limit_or(50, 200),
+            public_history_limit(&snapshot),
             None,
         ));
     }
 
-    let limit = page.limit_or(50, 200);
-    let cursor = aster_forge_api::parse_datetime_id_cursor(
-        cursor.after_created_at,
-        cursor.after_id,
-        "activity",
-    )?;
+    let configured_limit = public_history_limit(&snapshot);
+    let limit = page.limit_or(configured_limit, 200).min(configured_limit);
     let after = public_history_cutoff(&snapshot);
     let message_parts = public_message_parts_from_snapshot(&snapshot);
     let projection_context = ActivityProjectionContext::load(state.db_handles.reader()).await?;
     let slice =
-        beacon_repo::list_activity_events_cursor(state.db_handles.reader(), limit, cursor, after)
+        beacon_repo::list_activity_events_cursor(state.db_handles.reader(), limit, None, after)
             .await?;
-    let next_cursor = if slice.has_more {
-        slice
-            .items
-            .last()
-            .map(|item| aster_forge_api::DateTimeIdCursor {
-                value: item.observed_at,
-                id: item.id,
-            })
-    } else {
-        None
-    };
     let mut items = Vec::with_capacity(slice.items.len());
     for event in slice.items {
         let public_id = public_activity_event_id(event.id);
@@ -266,13 +251,20 @@ pub async fn public_activity_log(
             activity: project_public_activity(&projection_context, event, &message_parts),
         });
     }
+    let public_total = u64::try_from(items.len()).unwrap_or(0);
 
     Ok(aster_forge_api::CursorPage::new(
         items,
-        slice.total,
+        public_total,
         limit,
-        next_cursor,
+        None,
     ))
+}
+
+fn public_history_limit(snapshot: &aster_forge_config::SyncConfigSnapshot) -> u64 {
+    snapshot
+        .get_u64_or(VISIBILITY_PUBLIC_HISTORY_LIMIT_KEY, 10)
+        .clamp(1, 200)
 }
 
 pub async fn public_activity_summary(
@@ -486,6 +478,7 @@ pub async fn visibility_policy(
         message_parts: public_message_parts_from_snapshot(&snapshot),
         public_history_enabled: snapshot.get_bool_or(VISIBILITY_PUBLIC_HISTORY_ENABLED_KEY, true),
         public_history_days: snapshot.get_u64_or(VISIBILITY_PUBLIC_HISTORY_DAYS_KEY, 7),
+        public_history_limit: public_history_limit(&snapshot),
         private_mode_enabled: snapshot.get_bool_or(PRIVACY_PRIVATE_MODE_ENABLED_KEY, false),
         private_mode_label: snapshot.get_string_or(PRIVACY_PRIVATE_MODE_LABEL_KEY, "Signal hidden"),
     })
@@ -520,6 +513,13 @@ pub async fn update_visibility_policy(
         state.db_handles.writer(),
         VISIBILITY_PUBLIC_HISTORY_DAYS_KEY,
         &input.public_history_days.to_string(),
+        Some(admin_id),
+    )
+    .await?;
+    system_config_repo::upsert(
+        state.db_handles.writer(),
+        VISIBILITY_PUBLIC_HISTORY_LIMIT_KEY,
+        &input.public_history_limit.to_string(),
         Some(admin_id),
     )
     .await?;

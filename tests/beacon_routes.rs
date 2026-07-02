@@ -306,6 +306,74 @@ async fn beacon_ingest_updates_public_now_projection() {
 }
 
 #[actix_web::test]
+async fn public_activity_log_respects_configured_public_history_limit() {
+    let state = common::setup().await;
+    let device = beacon_cast::services::beacon_service::create_device(
+        &state,
+        beacon_cast::types::CreateBeaconDeviceRequest {
+            device_key: "public-limit-device".to_string(),
+            display_name: "Public Limit Device".to_string(),
+            kind: "desktop".to_string(),
+            priority: 10,
+        },
+    )
+    .await
+    .expect("create beacon device");
+    let token = beacon_cast::services::beacon_service::create_device_token(
+        &state,
+        device.id,
+        beacon_cast::types::CreateBeaconDeviceTokenRequest {
+            name: "public limit token".to_string(),
+        },
+    )
+    .await
+    .expect("create beacon device token")
+    .token;
+    beacon_cast::db::repository::system_config_repo::upsert(
+        state.db_handles.writer(),
+        beacon_cast::config::definitions::VISIBILITY_PUBLIC_HISTORY_LIMIT_KEY,
+        "2",
+        None,
+    )
+    .await
+    .expect("set public history limit");
+    let app = create_test_app!(state.clone());
+
+    for offset in [3, 2, 1] {
+        let mut signal = valid_beacon_payload();
+        signal.observed_at = Some(chrono::Utc::now() - chrono::Duration::seconds(offset));
+        let ingest = test::call_service(
+            &app,
+            test::TestRequest::post()
+                .uri("/api/v1/beacon/signals")
+                .insert_header(("authorization", format!("Bearer {token}")))
+                .set_json(signal)
+                .to_request(),
+        )
+        .await;
+        assert_eq!(ingest.status(), StatusCode::ACCEPTED);
+    }
+
+    let log = test::call_service(
+        &app,
+        test::TestRequest::get()
+            .uri("/api/v1/beacon/activity-log?limit=10")
+            .to_request(),
+    )
+    .await;
+    assert_eq!(log.status(), StatusCode::OK);
+    let log_body: ApiResponse<TestCursorPage<ActivityLogEntry, TestDateTimeIdCursor>> =
+        test::read_body_json(log).await;
+    let log_page = log_body
+        .data
+        .expect("activity log response should include data");
+    assert_eq!(log_page.limit, 2);
+    assert_eq!(log_page.total, 2);
+    assert_eq!(log_page.items.len(), 2);
+    assert!(log_page.next_cursor.is_none());
+}
+
+#[actix_web::test]
 async fn unconfigured_app_does_not_inherit_hardcoded_activity() {
     let state = common::setup().await;
     let device = beacon_cast::services::beacon_service::create_device(

@@ -23,6 +23,7 @@ pub const SYSTEM_CONFIG_ALLOWED_CATEGORIES: &[&str] = &[
 pub const VISIBILITY_PUBLIC_MESSAGE_PARTS_KEY: &str = "visibility.public_message_parts";
 pub const VISIBILITY_PUBLIC_HISTORY_ENABLED_KEY: &str = "visibility.public_history_enabled";
 pub const VISIBILITY_PUBLIC_HISTORY_DAYS_KEY: &str = "visibility.public_history_days";
+pub const VISIBILITY_PUBLIC_HISTORY_LIMIT_KEY: &str = "visibility.public_history_limit";
 pub const ACTIVITY_OFFLINE_AFTER_SECONDS_KEY: &str = "activity.offline_after_seconds";
 pub const ACTIVITY_IDLE_AFTER_SECONDS_KEY: &str = "activity.idle_after_seconds";
 pub const PRIVACY_PRIVATE_MODE_ENABLED_KEY: &str = "privacy.private_mode_enabled";
@@ -55,6 +56,10 @@ fn default_private_label() -> String {
 
 fn default_public_history_days() -> String {
     "7".to_string()
+}
+
+fn default_public_history_limit() -> String {
+    "10".to_string()
 }
 
 fn default_offline_after_seconds() -> String {
@@ -162,6 +167,19 @@ pub const VISIBILITY_PUBLIC_HISTORY_DAYS: ConfigDefinition = ConfigDefinition {
     normalize_fn: Some(normalize_positive_u64),
     category: CONFIG_CATEGORY_VISIBILITY,
     description: "Maximum number of days exposed by public history endpoints.",
+    visibility: ConfigVisibility::Authenticated,
+    ..ConfigDefinition::private_system()
+};
+
+pub const VISIBILITY_PUBLIC_HISTORY_LIMIT: ConfigDefinition = ConfigDefinition {
+    key: VISIBILITY_PUBLIC_HISTORY_LIMIT_KEY,
+    label_i18n_key: "settings_visibility_public_history_limit_label",
+    description_i18n_key: "settings_visibility_public_history_limit_desc",
+    value_type: ConfigValueType::Number,
+    default_fn: default_public_history_limit,
+    normalize_fn: Some(normalize_positive_u64),
+    category: CONFIG_CATEGORY_VISIBILITY,
+    description: "Maximum number of public activity log entries exposed at once.",
     visibility: ConfigVisibility::Authenticated,
     ..ConfigDefinition::private_system()
 };
@@ -299,6 +317,7 @@ pub const ALL_CONFIGS: &[ConfigDefinition] = &[
     VISIBILITY_PUBLIC_MESSAGE_PARTS,
     VISIBILITY_PUBLIC_HISTORY_ENABLED,
     VISIBILITY_PUBLIC_HISTORY_DAYS,
+    VISIBILITY_PUBLIC_HISTORY_LIMIT,
     ACTIVITY_OFFLINE_AFTER_SECONDS,
     ACTIVITY_IDLE_AFTER_SECONDS,
     PRIVACY_PRIVATE_MODE_ENABLED,

@@ -66,12 +66,10 @@ function withQuery(path: string, params: Record<string, unknown>) {
 
 export const publicBeaconService = {
 	now: () => api.get<NowResponse>("/beacon/now"),
-	activityLog: (limit = 12, cursor?: Cursor | null) =>
+	activityLog: (limit = 12) =>
 		api.get<ActivityLogPage>(
 			withQuery("/beacon/activity-log", {
 				limit,
-				after_created_at: cursor?.value,
-				after_id: cursor?.id,
 			}),
 		),
 	summary: () => api.get<ActivitySummary>("/beacon/activity-summary"),

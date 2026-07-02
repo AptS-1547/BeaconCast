@@ -44,7 +44,7 @@ pub async fn now(state: web::Data<crate::runtime::AppState>) -> HttpResponse {
     get,
     path = "/api/v1/beacon/activity-log",
     tag = "beacon",
-    params(aster_forge_api::LimitQuery, aster_forge_api::CreatedAtCursorQuery),
+    params(aster_forge_api::LimitQuery),
     responses(
         (status = 200, description = "Sanitized public activity history", body = inline(ApiResponse<aster_forge_api::CursorPage<crate::types::ActivityLogEntry, aster_forge_api::DateTimeIdCursor>>)),
         (status = 500, description = "Service error", body = inline(ApiResponse<crate::api::response::ApiEmptyData>))
@@ -53,14 +53,9 @@ pub async fn now(state: web::Data<crate::runtime::AppState>) -> HttpResponse {
 pub async fn activity_log(
     state: web::Data<crate::runtime::AppState>,
     page: web::Query<aster_forge_api::LimitQuery>,
-    cursor: web::Query<aster_forge_api::CreatedAtCursorQuery>,
 ) -> HttpResponse {
-    match crate::services::beacon_service::public_activity_log(
-        state.get_ref(),
-        page.into_inner(),
-        cursor.into_inner(),
-    )
-    .await
+    match crate::services::beacon_service::public_activity_log(state.get_ref(), page.into_inner())
+        .await
     {
         Ok(response) => HttpResponse::Ok().json(ApiResponse::ok(response)),
         Err(error) => common::app_error(error),
