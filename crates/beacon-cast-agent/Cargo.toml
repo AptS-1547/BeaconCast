@@ -1,0 +1,30 @@
+[package]
+name = "beacon-cast-agent"
+version = "0.0.1-alpha.1"
+description = "Trusted local activity signal collector for BeaconCast"
+edition = "2024"
+rust-version = "1.95"
+license = "MIT"
+repository = ""
+
+[[bin]]
+name = "beacon-cast-agent"
+path = "src/main.rs"
+
+[dependencies]
+beacon-cast-contract = { path = "../beacon-cast-contract" }
+chrono = { version = "0.4", features = ["clock", "serde"] }
+clap = { version = "4", features = ["derive", "env"] }
+reqwest = { version = "0.13", default-features = false, features = ["json", "rustls"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+tokio = { version = "1", features = ["fs", "macros", "process", "rt-multi-thread", "signal", "time"] }
+toml = "1.1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+url = "2"
+x-win = "5.7.0"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2-app-kit = { version = "0.3.2", features = ["NSWorkspace", "NSRunningApplication"] }

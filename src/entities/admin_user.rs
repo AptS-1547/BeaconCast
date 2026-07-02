@@ -1,0 +1,23 @@
+//! SeaORM entity for `admin_users`.
+
+use chrono::{DateTime, Utc};
+use sea_orm::entity::prelude::*;
+
+#[derive(Clone, Debug, PartialEq, DeriveEntityModel)]
+#[sea_orm(table_name = "admin_users")]
+pub struct Model {
+    #[sea_orm(primary_key)]
+    pub id: i64,
+    pub username: String,
+    pub password_hash: String,
+    pub display_name: String,
+    pub last_login_at: Option<DateTime<Utc>>,
+    pub disabled_at: Option<DateTime<Utc>>,
+    pub created_at: DateTime<Utc>,
+    pub updated_at: DateTime<Utc>,
+}
+
+#[derive(Copy, Clone, Debug, EnumIter, DeriveRelation)]
+pub enum Relation {}
+
+impl ActiveModelBehavior for ActiveModel {}

@@ -1,0 +1,134 @@
+//! OpenAPI document assembly.
+//!
+//! Product routes should add their annotated handlers and DTO schemas here. The module is compiled
+//! only for debug builds with the `openapi` feature, keeping normal release binaries free of API
+//! documentation generation overhead.
+
+use utoipa::OpenApi;
+
+#[derive(OpenApi)]
+#[openapi(
+    info(
+        title = env!("CARGO_PKG_NAME"),
+        version = env!("CARGO_PKG_VERSION"),
+        description = env!("CARGO_PKG_DESCRIPTION"),
+        license(name = "MIT"),
+    ),
+    paths(
+        crate::api::routes::health::health,
+        crate::api::routes::health::ready,
+        crate::api::routes::beacon::now,
+        crate::api::routes::beacon::activity_log,
+        crate::api::routes::beacon::activity_summary,
+        crate::api::routes::beacon::post_beacon,
+        crate::api::routes::beacon::post_usage_spans,
+        crate::api::routes::beacon::agent_config,
+        crate::api::routes::beacon::put_agent_capabilities,
+        crate::api::routes::admin::auth::check_auth,
+        crate::api::routes::admin::auth::setup_admin,
+        crate::api::routes::admin::auth::login_admin,
+        crate::api::routes::admin::auth::logout_admin,
+        crate::api::routes::admin::auth::me,
+        crate::api::routes::admin::auth::list_sessions,
+        crate::api::routes::admin::auth::revoke_session,
+        crate::api::routes::admin::beacon_devices::list_beacon_devices,
+        crate::api::routes::admin::beacon_devices::create_beacon_device,
+        crate::api::routes::admin::beacon_devices::disable_beacon_device,
+        crate::api::routes::admin::beacon_devices::enable_beacon_device,
+        crate::api::routes::admin::beacon_devices::list_beacon_device_tokens,
+        crate::api::routes::admin::beacon_devices::create_beacon_device_token,
+        crate::api::routes::admin::beacon_devices::revoke_beacon_device_token,
+        crate::api::routes::admin::audit_logs::list_audit_logs,
+        crate::api::routes::admin::activity::list_events,
+        crate::api::routes::admin::activity::list_usage_spans,
+        crate::api::routes::admin::activity::usage_summary,
+        crate::api::routes::admin::classification::list_activity_actions,
+        crate::api::routes::admin::classification::upsert_activity_action,
+        crate::api::routes::admin::classification::list_activity_applications,
+        crate::api::routes::admin::classification::upsert_activity_application,
+        crate::api::routes::admin::visibility::get_visibility_policy,
+        crate::api::routes::admin::visibility::update_visibility_policy,
+        crate::api::routes::admin::visibility::get_agent_policy,
+        crate::api::routes::admin::visibility::update_agent_policy,
+        crate::api::routes::admin::visibility::get_manual_override,
+        crate::api::routes::admin::visibility::set_manual_override,
+        crate::api::routes::admin::visibility::clear_manual_override,
+    ),
+    components(
+        schemas(
+            crate::api::error_code::ApiErrorCode,
+            crate::api::response::ApiEmptyData,
+            crate::api::response::ApiErrorInfo,
+            crate::api::response::StatusResponse,
+            aster_forge_api::CursorPage<
+                crate::api::dto::admin::AdminAuditLogResponse,
+                aster_forge_api::DateTimeIdCursor
+            >,
+            aster_forge_api::DateTimeIdCursor,
+            aster_forge_api::LimitQuery,
+            aster_forge_api::CreatedAtCursorQuery,
+            aster_forge_api::CursorPage<
+                crate::types::ActivityLogEntry,
+                aster_forge_api::DateTimeIdCursor
+            >,
+            aster_forge_api::CursorPage<
+                crate::types::AdminActivityEventResponse,
+                aster_forge_api::DateTimeIdCursor
+            >,
+            aster_forge_api::CursorPage<
+                crate::types::AdminUsageSpanResponse,
+                aster_forge_api::DateTimeIdCursor
+            >,
+            crate::api::dto::admin::AdminAuditLogFilterQuery,
+            crate::api::dto::admin::AdminAuditLogResponse,
+            crate::api::dto::admin::AdminSessionResponse,
+            crate::api::dto::admin::BeaconDeviceResponse,
+            crate::api::dto::admin::BeaconDeviceTokenResponse,
+            crate::api::dto::admin::CreateBeaconDeviceTokenAdminRequest,
+            crate::api::dto::admin::CreateBeaconDeviceTokenAdminResponse,
+            crate::api::dto::admin::RevokeResponse,
+            crate::api::dto::admin::ToggleResponse,
+            crate::api::dto::auth::AdminAuthCheckResponse,
+            crate::api::dto::auth::AdminAuthResponse,
+            crate::api::dto::auth::AdminLoginRequest,
+            crate::api::dto::auth::AdminLogoutResponse,
+            crate::api::dto::auth::AdminSetupRequest,
+            crate::api::dto::auth::AdminUserResponse,
+            crate::types::ActivityActionResponse,
+            crate::types::ActivityApplicationResponse,
+            crate::types::ActivityMetadata,
+            crate::types::ActivityLogEntry,
+            crate::types::ActivityInferenceSource,
+            crate::types::ActivitySummaryResponse,
+            crate::types::AdminActivityEventResponse,
+            crate::types::AdminUsageSpanResponse,
+            crate::types::AdminUsageSummaryResponse,
+            crate::types::AgentBeaconRequest,
+            crate::types::AgentCapabilitiesRequest,
+            crate::types::AgentCapabilitiesResponse,
+            crate::types::AgentCapability,
+            crate::types::AgentConfigResponse,
+            crate::types::AgentPolicyResponse,
+            crate::types::AgentUsageSpan,
+            crate::types::AgentUsageSpansRequest,
+            crate::types::BeaconAcceptedResponse,
+            crate::types::ClearManualOverrideResponse,
+            crate::types::CreateBeaconDeviceRequest,
+            crate::types::CreateBeaconDeviceTokenRequest,
+            crate::types::ManualOverrideResponse,
+            crate::types::NowResponse,
+            crate::types::ProjectSnapshot,
+            crate::types::PublicActivity,
+            crate::types::PublicMessagePart,
+            crate::types::SetManualOverrideRequest,
+            crate::types::UpdateAgentPolicyRequest,
+            crate::types::UpdateVisibilityPolicyRequest,
+            crate::types::UsageSpansAcceptedResponse,
+            crate::types::UsageTotal,
+            crate::types::UpsertActivityActionRequest,
+            crate::types::UpsertActivityApplicationRequest,
+            crate::types::VisibilityPolicyResponse,
+        )
+    )
+)]
+pub struct ApiDoc;

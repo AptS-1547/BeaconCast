@@ -1,0 +1,146 @@
+{
+	"actions": {
+		"createDevice": "Register device",
+		"createToken": "Issue pass",
+		"login": "Enter menu",
+		"logout": "Log out",
+		"refresh": "Refresh",
+		"revoke": "Revoke",
+		"save": "Save",
+		"saveAgent": "Save patrol",
+		"saveVisibility": "Save board",
+		"saving": "Saving",
+		"setup": "Create admin"
+	},
+	"agent": {
+		"configPollInterval": "Policy poll seconds",
+		"includeAppLabel": "Report app label",
+		"reportInterval": "Report interval seconds"
+	},
+	"auth": {
+		"displayName": "Display name",
+		"loginTitle": "Admin menu",
+		"password": "Password",
+		"setupTitle": "Initialize admin",
+		"subtitle": "Browser access uses an HttpOnly cookie session. Device agents use separate bearer tokens.",
+		"username": "Username"
+	},
+	"capabilities": {
+		"frontmost_app": "Frontmost app",
+		"manual_signal": "Manual signal"
+	},
+	"classification": {
+		"actionKey": "Action key",
+		"actions": "Action cards",
+		"aliases": "App aliases",
+		"applications": "Application bindings",
+		"appKey": "App key",
+		"category": "Category",
+		"defaultAction": "Default action",
+		"enabled": "Enabled",
+		"label": "Admin label",
+		"messageTemplate": "Message template",
+		"newAction": "New action",
+		"newApplication": "New app",
+		"publicLabel": "Public label",
+		"sortOrder": "Sort order",
+		"subtitle": "The server uses these rules to classify app observations from agents. Agents do not decide public activity.",
+		"title": "Classification rules"
+	},
+	"dashboard": {
+		"devices": "Device slots",
+		"events": "Event journal",
+		"manualOverride": "Manual override",
+		"sessions": "Admin sessions",
+		"systemConfig": "System config",
+		"title": "Farm ledger",
+		"tokens": "Passes",
+		"usage": "Time ledger",
+		"visibility": "Visibility"
+	},
+	"empty": {
+		"devices": "No devices have been registered yet.",
+		"events": "No activity events yet.",
+		"sessions": "No session data yet.",
+		"tokens": "This device has no passes yet.",
+		"usage": "No usage totals yet.",
+		"usageSpans": "No usage spans yet."
+	},
+	"fields": {
+		"activity": "Activity",
+		"createdAt": "Created",
+		"device": "Device",
+		"deviceKey": "Device key",
+		"displayName": "Display name",
+		"kind": "Kind",
+		"lastUsedAt": "Last used",
+		"name": "Name",
+		"priority": "Priority",
+		"project": "Project",
+		"revokedAt": "Revoked",
+		"source": "Source",
+		"status": "Status"
+	},
+	"loadFailed": "Admin data could not be loaded.",
+	"nav": {
+		"activity": "Activity",
+		"classification": "Classification",
+		"devices": "Devices",
+		"overview": "Overview",
+		"sessions": "Sessions",
+		"settings": "Settings"
+	},
+	"overview": {
+		"subtitle": "The admin entry shows key state. Details live on subpages."
+	},
+	"policy": {
+		"agentRunner": "Patrol shed",
+		"details": "Details",
+		"preview": "Board preview",
+		"publicBoard": "Notice board"
+	},
+	"session": {
+		"current": "Current",
+		"expiredAt": "Expires",
+		"user": "Current user"
+	},
+	"setup": {
+		"needed": "No admin account exists yet. Initialize one first.",
+		"ready": "The admin account has been initialized."
+	},
+	"tokens": {
+		"createdToken": "The new agent token is shown only once. Put it into agent.toml now.",
+		"defaultDeviceKind": "desktop",
+		"defaultTokenName": "local-agent",
+		"deviceKeyPlaceholder": "macbook-pro",
+		"displayNamePlaceholder": "MacBook Pro",
+		"tokenValue": "Token"
+	},
+	"usage": {
+		"app": "App",
+		"apps": "App usage",
+		"categories": "Categories",
+		"duration": "Duration",
+		"projects": "Projects",
+		"statuses": "Statuses",
+		"todayTotal": "Today total"
+	},
+	"visibility": {
+		"historyDays": "Public history days",
+		"historyEnabled": "Public history",
+		"parts": {
+			"activity": "Activity text",
+			"app": "Current app",
+			"browser_context": "Browser context",
+			"category": "Category",
+			"context": "Safe context",
+			"git_branch": "Git branch",
+			"project": "Project",
+			"source": "Signal source",
+			"status": "Status"
+		},
+		"partsCount": "{{count}} public parts",
+		"privateLabel": "Private label",
+		"privateMode": "Private mode"
+	}
+}

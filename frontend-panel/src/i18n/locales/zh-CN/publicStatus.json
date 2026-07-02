@@ -1,0 +1,49 @@
+{
+	"actions": {
+		"loading": "读取中",
+		"refresh": "刷新"
+	},
+	"characterSlot": {
+		"ariaLabel": "未来角色动画槽位",
+		"description": "后面可以把这里替换成 Canvas、sprite sheet 或 Lottie 角色状态动画。当前先用静态槽位把布局占住。",
+		"title": "角色动画预留位"
+	},
+	"common": {
+		"noProject": "未绑定任务",
+		"waitingActivity": "等待第一条信标"
+	},
+	"currentTask": {
+		"label": "当前任务",
+		"project": "项目",
+		"source": "来源",
+		"updated": "更新",
+		"window": "窗口",
+		"windowDays_one": "{{count}} 天",
+		"windowDays_other": "{{count}} 天",
+		"windowDisabled": "未开启"
+	},
+	"emptyLog": {
+		"description": "等 agent 发来第一条活动记录，这里就会变成任务日志。",
+		"title": "日志还没写上去"
+	},
+	"freshness": {
+		"fresh": "信号新鲜",
+		"stale": "信号有点旧",
+		"staleShort": "旧信号"
+	},
+	"hero": {
+		"adminMenu": "管理员菜单",
+		"title": "猫猫的今日信标"
+	},
+	"log": {
+		"loadFailed": "公开信标暂时读不到，先显示空白告示板。",
+		"title": "最近日志"
+	},
+	"notice": {
+		"currentSignal": "当前信号",
+		"currentStatus": "当前状态",
+		"lastUpdated": "最后更新",
+		"title": "信标告示板",
+		"totalEvents": "事件总数"
+	}
+}
